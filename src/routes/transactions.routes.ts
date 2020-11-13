@@ -7,7 +7,7 @@ import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
 
-import uploadConfig from "../config/upload";
+import uploadConfig from '../config/upload';
 
 const transactionsRouter = Router();
 
@@ -20,22 +20,22 @@ transactionsRouter.get('/', async (request, response) => {
 
   const balance = await transactionsRepository.getBalance();
 
-  return response.json({transactions, balance});
+  return response.json({ transactions, balance });
 });
 
 transactionsRouter.post('/', async (request, response) => {
-   const { title, value, type, category } = request.body;
+  const { title, value, type, category } = request.body;
 
   const createTransaction = new CreateTransactionService();
 
-   const transaction = await createTransaction.execute({
-     title,
-     value,
-     type,
-     category
-   })
+  const transaction = await createTransaction.execute({
+    title,
+    value,
+    type,
+    category,
+  });
 
-   return response.json(transaction);
+  return response.json(transaction);
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
@@ -45,17 +45,19 @@ transactionsRouter.delete('/:id', async (request, response) => {
 
   await deleteTransaction.execute(id);
 
-  return response.json({mesage: "Transação deletada"});
+  return response.json({ mesage: 'Transação deletada' });
 });
 
-transactionsRouter.post('/import',
-upload.single('file'),
-async (request, response) => {
-  const importTransactions = new ImportTransactionsService();
+transactionsRouter.post(
+  '/import',
+  upload.single('file'),
+  async (request, response) => {
+    const importTransactions = new ImportTransactionsService();
 
-  const transactions = await importTransactions.execute( request.file.path);
+    const transactions = await importTransactions.execute(request.file.path);
 
-  return response.json(transactions)
-});
+    return response.json(transactions);
+  },
+);
 
 export default transactionsRouter;

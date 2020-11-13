@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTransactions1604614779962 implements MigrationInterface {
+export class CreateTransactions1605287018974 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -27,7 +27,8 @@ export class CreateTransactions1604614779962 implements MigrationInterface {
           },
           {
             name: 'category_id',
-            type: 'varchar',
+            type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'created_at',
@@ -38,6 +39,16 @@ export class CreateTransactions1604614779962 implements MigrationInterface {
             name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
+          },
+        ],
+        foreignKeys: [
+          {
+            name: 'TrasactionCategory',
+            columnNames: ['category_id'],
+            referencedTableName: 'categories',
+            referencedColumnNames: ['id'],
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE',
           },
         ],
       }),
